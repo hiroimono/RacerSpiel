@@ -1,0 +1,71 @@
+$rowHeight: 800px;
+
+#screen {
+  display: grid;
+  grid-template-rows: 60px calc(100vh - 90px) 30px;
+
+  #header,
+  #footer {
+    grid-column: 1 / span 2;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2;
+  }
+
+  #playArea {
+    position: relative;
+    width: 100vw;
+    z-index: 1;
+    overflow-y: hidden;
+
+    #absoluteArea {
+      position: absolute;
+      height: 2400px;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+    }
+
+    .relativeArea {
+      display: grid;
+      grid-template-rows: 800px 800px 800px;
+      position: relative;
+
+      .playAreaRow {
+        display: grid;
+        grid-template-columns: 1fr 800px 1fr;
+        grid-template-rows: 800px;
+
+        .road {
+          display: grid;
+          grid-template-columns: 51px 20px 206px 20px 206px 20px 206px 20px 51px;
+
+          .roadLinesMiddle {
+            display: grid;
+            grid-template-rows: 100px 100px 100px 100px 100px 100px 100px 100px;
+            grid-template-columns: 20px;
+
+            :nth-child(odd) {
+              background-color: white;
+            }
+          }
+
+        }
+      }
+
+      .rowTop {
+        position: absolute;
+        bottom: 2*$rowHeight;
+        left: 0;
+      }
+
+      .rowButtom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+  }
+}
