@@ -30,7 +30,6 @@ $rowHeight: 800px;
     .relativeArea {
       display: grid;
       grid-template-rows: 800px 800px 800px;
-      position: relative;
 
       .playAreaRow {
         display: grid;
@@ -40,6 +39,17 @@ $rowHeight: 800px;
         .road {
           display: grid;
           grid-template-columns: 51px 20px 206px 20px 206px 20px 206px 20px 51px;
+
+          .roadPart {
+            // position: relative;
+
+            .racer {
+              position: fixed;
+              bottom: 50px;
+              left: calc(50% - 335px);
+              //   left: calc(50% + 175px);
+            }
+          }
 
           .roadLinesMiddle {
             display: grid;

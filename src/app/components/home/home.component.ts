@@ -8,6 +8,9 @@ import { Component, OnInit, Renderer2, ElementRef, ViewChild } from '@angular/co
 })
 export class HomeComponent implements OnInit {
     @ViewChild('absoluteArea', { static: true }) absoluteArea: ElementRef;
+    @ViewChild('racer', { static: true }) racer: ElementRef;
+    public left: number = -335;
+    public bottom: number = 50;
 
     constructor(
         private renderer: Renderer2,
@@ -15,39 +18,89 @@ export class HomeComponent implements OnInit {
         // private _storeData: DataStoreService
     ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.renderer.listen('document', 'keydown', (event) => {
+            console.log(event.key);
+            if (event.key === 'ArrowRight') {
+                this.toRight();
+            }
+
+            if (event.key === 'ArrowLeft') {
+                this.toLeft();
+            }
+
+            if (event.key === 'ArrowUp') {
+                console.log('ArrowUp');
+                this.speedUp();
+            }
+
+            if (event.key === 'ArrowDown') {
+                this.speedDown();
+            }
+        });
+    }
 
     ngAfterViewInit() {
         this.go();
+        // console.log('this.renderer: ', this.renderer);
     }
 
     public go() {
         let road = this.absoluteArea.nativeElement;
-        console.log('road: ', road);
+        // console.log('road: ', road);
 
         let childs = road.childNodes;
-        console.log('childs: ', childs);
-        // let newRow = road.childNodes[childs.length - 1].cloneNode(true);
+        // console.log('childs: ', childs);
         let velocity: number = 0;
-        // let count: number = 0;
-        // let k: number = 16;
 
         setInterval(() => {
-            // count += 10;
             velocity += 2;
-            // let elapsedCount: number = count;
-            // velocity = count / k;
-            console.log('bottom: ', `-${velocity}`);
+            // console.log('bottom: ', `-${velocity}`);
             if (velocity % 800 === 0) {
-                // this.renderer.removeChild(road, road.childNodes[childs.length - 1]);
                 road.prepend(road.childNodes[childs.length - 1]);
-                console.log('new road 2: ', road);
-                // let currentBottom = road.style.bottom;
+                // console.log('new road 2: ', road);
                 velocity = velocity - 800;
-                // this.renderer.setStyle(road, 'bottom', `-${bottom}px`);
             } else {
-                this.renderer.setStyle(road, 'bottom', `-${velocity}px`);
+                this.renderer.setStyle(road, 'bottom', `-${velocity}px`); // first way: better and the way of saving the application from xss attacks
+                road.style.bottom = `-${velocity}px`; // second way
+                // this.renderer.setStyle(this.racer.nativeElement, 'bottom', `${velocity}px`)
             }
         }, 1);
+    }
+
+    public toRight() {
+        let increment = 10;
+        console.log('this.left: ', this.left);
+        if (this.left < 255 && this.left >= -395) {
+            this.left += increment;
+            this.renderer.setStyle(this.racer.nativeElement, 'left', `calc(50% + ${this.left}px)`);
+        }
+    }
+
+    public toLeft() {
+        let increment = 10;
+        console.log('this.left: ', this.left);
+        if (this.left <= 255 && this.left > -395) {
+            this.left -= increment;
+            this.renderer.setStyle(this.racer.nativeElement, 'left', `calc(50% + ${this.left}px)`);
+        }
+    }
+
+    public speedUp() {
+        let increment = 3;
+        console.log('increment: ', increment);
+        if (this.bottom < 800) {
+            this.bottom += increment;
+            this.renderer.setStyle(this.racer.nativeElement, 'bottom', `${this.bottom}px`);
+        }
+    }
+
+    public speedDown() {
+        let increment = -5;
+        console.log('increment: ', increment);
+        if (this.bottom > 50) {
+            this.bottom += increment;
+            this.renderer.setStyle(this.racer.nativeElement, 'bottom', `${this.bottom}px`);
+        }
     }
 }
